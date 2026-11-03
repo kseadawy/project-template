@@ -1,0 +1,55 @@
+name: باج
+description: سلوك غلط أو مشكلة أمنية
+title: "[باج] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: إيه اللي بيحصل
+      description: الوصف في سطرين، من غير تخمين للسبب.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: خطوات إعادة المشكلة
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: المتوقع
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: الفعلي
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: الأولوية
+      options:
+        - P0 — بيمنع الاستخدام أو أمني
+        - P1 — بيأثر على تجربة أساسية
+        - P2 — مزعج بس
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: security
+    attributes:
+      label: أمني؟
+      options:
+        - label: الباج أمني (بيتضاف ليبل security ويتعامل كـ P0)
