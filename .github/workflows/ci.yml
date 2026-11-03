@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [master, main]
+
+jobs:
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Detect stack
+        id: detect
+        run: |
+          if [ -f package.json ]; then echo "kind=node" >> "$GITHUB_OUTPUT"
+          elif [ -f requirements.txt ]; then echo "kind=python" >> "$GITHUB_OUTPUT"
+          elif [ -f pom.xml ]; then echo "kind=java" >> "$GITHUB_OUTPUT"
+          else echo "kind=none" >> "$GITHUB_OUTPUT"; fi
+
+      - uses: actions/setup-node@v4
+        if: steps.detect.outputs.kind == 'node'
+        with:
+          node-version: 20
+          cache: npm
+      - name: Node tests
+        if: steps.detect.outputs.kind == 'node'
+        run: npm ci && npm test
+
+      - uses: actions/setup-python@v5
+        if: steps.detect.outputs.kind == 'python'
+        with:
+          python-version: "3.12"
+      - name: Python tests
+        if: steps.detect.outputs.kind == 'python'
+        run: pip install -r requirements.txt && pytest
+
+      - uses: actions/setup-java@v4
+        if: steps.detect.outputs.kind == 'java'
+        with:
+          distribution: temurin
+          java-version: "21"
+      - name: Java tests
+        if: steps.detect.outputs.kind == 'java'
+        run: ./mvnw test
+
+      - name: No stack detected
+        if: steps.detect.outputs.kind == 'none'
+        run: echo "⚠️ مفيش تقنية معروفة — عدّل ci.yml قبل أول merge"
