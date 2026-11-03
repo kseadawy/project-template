@@ -39,9 +39,9 @@
 
 `… → Duplicate project` واختار الريبو الجديد.
 
-## 6. Branch protection على الفرع الرئيسي
+## 6. Branch protection على `main`
 
-**Settings → Branches → Add rule** على `main`:
+**Settings → Branches → Add rule → `main`:**
 
 - [ ] Require status checks to pass — اختار `Secret scan` و`Tests`
 - [ ] Require pull request before merging (حتى لو إنت لوحدك — ده اللي بيمنع التجاوز)
@@ -55,4 +55,4 @@
 - [ ] الحقول والليبلات والأتمتة موجودة
 - [ ] CI شغال وعدّى أول مرة
 - [ ] Branch protection مفعّل
-- [ ] صفحة الدورة C1 متعمولة ومرتبطة
+- [ ] صفحة الدورة C1 معمولة ومرتبطة
