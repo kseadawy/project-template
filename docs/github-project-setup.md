@@ -41,7 +41,7 @@
 
 ## 6. Branch protection على الفرع الرئيسي
 
-**Settings → Branches → Add rule** على `master` (أو `main`):
+**Settings → Branches → Add rule** على `main`:
 
 - [ ] Require status checks to pass — اختار `Secret scan` و`Tests`
 - [ ] Require pull request before merging (حتى لو إنت لوحدك — ده اللي بيمنع التجاوز)
@@ -55,4 +55,4 @@
 - [ ] الحقول والليبلات والأتمتة موجودة
 - [ ] CI شغال وعدّى أول مرة
 - [ ] Branch protection مفعّل
-- [ ] صفحة الدورة C1 متعملة ومرتبطة
+- [ ] صفحة الدورة C1 متعمولة ومرتبطة
