@@ -1,0 +1,57 @@
+name: مهمة
+description: ميزة أو جزء من دورة (شريحة رأسية)
+title: "[مهمة] "
+labels: ["feature"]
+body:
+  - type: input
+    id: cycle
+    attributes:
+      label: الدورة
+      placeholder: C1
+    validations:
+      required: true
+
+  - type: textarea
+    id: goal
+    attributes:
+      label: الهدف
+      description: إيه اللي هيبقى موجود بعد المهمة — جملة واحدة.
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: معايير القبول
+      description: كل سطر معيار قابل للاختبار. لو مش قابل للاختبار، مش معيار.
+      placeholder: |
+        - المستخدم يكتب عنوان ويرجع ٣ نتائج
+        - لو مفيش نتائج، تظهر رسالة واضحة
+    validations:
+      required: true
+
+  - type: textarea
+    id: design
+    attributes:
+      label: التصميم / السلوك
+      description: رابط تصميم أو وصف دقيق للشاشة والسلوك.
+
+  - type: dropdown
+    id: tier
+    attributes:
+      label: Tier
+      options:
+        - "0 — تجربة"
+        - "1 — منتج"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: dor
+    attributes:
+      label: تعريف الجاهز
+      options:
+        - label: معايير القبول قابلة للاختبار
+        - label: النطاق محدود (نص يوم)
+        - label: مرتبطة بالدورة الحالية
+        - label: مفيش اعتماد خارجي غير محسوم
