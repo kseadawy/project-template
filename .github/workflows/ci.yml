@@ -32,7 +32,7 @@ jobs:
       - name: Detect stack
         id: detect
         run: |
-          echo "lock=no" >> "$GITHUB_OUTPUT"
+          echo "lock=" >> "$GITHUB_OUTPUT"
           if [ -f package.json ]; then
             echo "kind=node" >> "$GITHUB_OUTPUT"
             [ -f package-lock.json ] && echo "lock=npm" >> "$GITHUB_OUTPUT"
