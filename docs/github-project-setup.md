@@ -23,6 +23,8 @@
 
 `bug` · `security` · `feature` · `agent` · `infra` · `docs`
 
+**قوالب الـ Issues:** `Task` (ميزة أو شريحة من دورة) و`Bug` — الأسماء إنجليزي والمحتوى عربي.
+
 ## 3. الأتمتة (Built-in workflows) — يدوي في الواجهة
 
 الـ API بيسمح بالحذف بس، مش بالتفعيل. فعّلهم مرة واحدة من **Project → ⋯ → Workflows**:
@@ -52,11 +54,10 @@
 
 > Duplicate بينقل: الحقول، العروض، الـ workflows المضبوطة، والـ draft issues. **مش** بينقل الـ Auto-add.
 
-## 6. حماية الفرع الرئيسي
+## 6. حماية الفرع الرئيسي (مفعّلة على القالب)
 
-> ⚠️ **قيد مهم:** حماية الفروع والـ rulesets **مش متاحين على ريبو خاص بحساب مجاني** (محتاج GitHub Pro):
-> `403 — Upgrade to GitHub Pro or make this repository public`.
-> البديل: ريبو **public**، أو تشتغل بالانضباط (PR صغير + CI أخضر) وتوثّق إن البوابة مش مفعّلة.
+> ✅ **الريبو القالب public وحماية `main` مفعّلة فعليًا:** `Secret scan` + `Tests` إجباريين، PR قبل الدمج، ومنع التجاوز.
+> ⚠️ الريبو **الخاص** على حساب مجاني مالوش حماية (`403 — Upgrade to GitHub Pro`) — فإما Pro أو public.
 
 **Settings → Branches → Add rule** على `main`:
 

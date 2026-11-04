@@ -1,7 +1,8 @@
 # project-template
 
-> قالب مشروع: القوالب والبوابات والـ CI — حسب **منهجية التطوير v1.3**.
+> قالب مشروع: القوالب والبوابات والـ CI — حسب **منهجية التطوير v1.4**.
 > استخدمه من زرار **Use this template** لما تبدأ أي مشروع جديد.
+> **public** — عشان حماية الفروع تكون متاحة (الريبو الخاص المجاني مالوش حماية).
 
 ---
 
@@ -11,7 +12,7 @@
 |---|---|
 | `.github/workflows/ci.yml` | فحص أسرار (gitleaks) + اختبارات تلقائية حسب التقنية |
 | `.github/pull_request_template.md` | تعريف الخلاص + سقف حجم الـ PR |
-| `.github/ISSUE_TEMPLATE/` | نماذج مهمة وباج بحقول إجبارية |
+| `.github/ISSUE_TEMPLATE/` | نماذج `Task` و`Bug` بحقول إجبارية |
 | `docs/playbook.md` | النسخة التنفيذية المختصرة من المنهجية |
 | `docs/github-project-setup.md` | إعداد الـ Project والليبلات والـ branch protection |
 
