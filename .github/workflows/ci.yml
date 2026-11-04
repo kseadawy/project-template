@@ -3,9 +3,14 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [master, main]
+    branches: [main]
+
+env:
+  # بيخلي CRA / Jest يشتغل مرة واحدة بدل وضع المراقبة
+  CI: true
 
 jobs:
+  # 1) فحص الأسرار — شغال مع أي تقنية
   secrets:
     name: Secret scan
     runs-on: ubuntu-latest
@@ -17,6 +22,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  # 2) الاختبارات — بتختار الأمر حسب نوع المشروع
   test:
     name: Tests
     runs-on: ubuntu-latest
@@ -26,36 +32,96 @@ jobs:
       - name: Detect stack
         id: detect
         run: |
-          if [ -f package.json ]; then echo "kind=node" >> "$GITHUB_OUTPUT"
-          elif [ -f requirements.txt ]; then echo "kind=python" >> "$GITHUB_OUTPUT"
-          elif [ -f pom.xml ]; then echo "kind=java" >> "$GITHUB_OUTPUT"
-          else echo "kind=none" >> "$GITHUB_OUTPUT"; fi
+          echo "lock=no" >> "$GITHUB_OUTPUT"
+          if [ -f package.json ]; then
+            echo "kind=node" >> "$GITHUB_OUTPUT"
+            [ -f package-lock.json ] && echo "lock=npm" >> "$GITHUB_OUTPUT"
+            [ -f pnpm-lock.yaml ] && echo "lock=pnpm" >> "$GITHUB_OUTPUT"
+            [ -f yarn.lock ] && echo "lock=yarn" >> "$GITHUB_OUTPUT"
+          elif [ -f requirements.txt ] || [ -f pyproject.toml ]; then
+            echo "kind=python" >> "$GITHUB_OUTPUT"
+          elif find . -maxdepth 3 \( -name '*.sln' -o -name '*.csproj' \) -print -quit | grep -q .; then
+            echo "kind=dotnet" >> "$GITHUB_OUTPUT"
+          elif [ -f pom.xml ] || [ -f build.gradle ] || [ -f build.gradle.kts ]; then
+            echo "kind=java" >> "$GITHUB_OUTPUT"
+          else
+            echo "kind=none" >> "$GITHUB_OUTPUT"
+          fi
 
+      # ---------- Node / React / أي فرونت إند ----------
       - uses: actions/setup-node@v4
         if: steps.detect.outputs.kind == 'node'
         with:
           node-version: 20
-          cache: npm
-      - name: Node tests
-        if: steps.detect.outputs.kind == 'node'
-        run: npm ci && npm test
+          cache: ${{ steps.detect.outputs.lock }}
 
+      - name: Install (Node)
+        if: steps.detect.outputs.kind == 'node'
+        run: |
+          if [ -f pnpm-lock.yaml ]; then corepack enable && pnpm install --frozen-lockfile
+          elif [ -f yarn.lock ]; then yarn install --frozen-lockfile
+          elif [ -f package-lock.json ]; then npm ci
+          else npm install
+          fi
+
+      - name: Tests (Node)
+        if: steps.detect.outputs.kind == 'node'
+        run: |
+          if node -e "const p=require('./package.json');process.exit((p.scripts||{}).test?0:1)"; then
+            npm test -- --passWithNoTests 2>/dev/null || npm test
+          else
+            echo "⚠️ مفيش سكربت test في package.json — اتخطّى"
+          fi
+
+      - name: Build (Node)
+        if: steps.detect.outputs.kind == 'node'
+        run: |
+          if node -e "const p=require('./package.json');process.exit((p.scripts||{}).build?0:1)"; then
+            npm run build
+          else
+            echo "ℹ️ مفيش سكربت build — اتخطّى"
+          fi
+
+      # ---------- .NET ----------
+      - uses: actions/setup-dotnet@v4
+        if: steps.detect.outputs.kind == 'dotnet'
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+
+      - name: Restore + Tests (.NET)
+        if: steps.detect.outputs.kind == 'dotnet'
+        run: dotnet test --nologo --verbosity minimal
+
+      # ---------- Python ----------
       - uses: actions/setup-python@v5
         if: steps.detect.outputs.kind == 'python'
         with:
           python-version: "3.12"
-      - name: Python tests
-        if: steps.detect.outputs.kind == 'python'
-        run: pip install -r requirements.txt && pytest
 
+      - name: Tests (Python)
+        if: steps.detect.outputs.kind == 'python'
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pytest
+          pytest -q
+
+      # ---------- Java ----------
       - uses: actions/setup-java@v4
         if: steps.detect.outputs.kind == 'java'
         with:
           distribution: temurin
           java-version: "21"
-      - name: Java tests
+
+      - name: Tests (Java)
         if: steps.detect.outputs.kind == 'java'
-        run: ./mvnw test
+        run: |
+          if [ -f mvnw ]; then chmod +x mvnw && ./mvnw test
+          elif [ -f pom.xml ]; then mvn -B test
+          else gradle test
+          fi
 
       - name: No stack detected
         if: steps.detect.outputs.kind == 'none'
