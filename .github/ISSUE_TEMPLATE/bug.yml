@@ -1,6 +1,6 @@
-name: باج
+name: Bug
 description: سلوك غلط أو مشكلة أمنية
-title: "[باج] "
+title: "[Bug] "
 labels: ["bug"]
 body:
   - type: textarea
