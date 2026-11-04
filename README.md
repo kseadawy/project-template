@@ -29,5 +29,5 @@
 1. **Use this template** → ريبو جديد.
 2. املأ بطاقة الحالة في `README` بتاع المشروع.
 3. اعدّل `ci.yml` لو التقنية مختلفة.
-4. فعّل branch protection على `main` (مطلوب: `Secret scan` و`Tests`).
-5. اعمل GitHub Project من القالب واربطه بالريبو.
+4. فعّل حماية `main` (المطلوب: `Secret scan` و`Tests`) — **محتاجة GitHub Pro للريبو الخاص**، وإلا اعتمد على PR + CI أخضر.
+5. **Duplicate** للـ Project القالب (https://github.com/users/kseadawy/projects/9) واربطه بالريبو، وأضف Auto-add.
