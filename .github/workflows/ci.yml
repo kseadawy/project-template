@@ -35,9 +35,9 @@ jobs:
           echo "lock=" >> "$GITHUB_OUTPUT"
           if [ -f package.json ]; then
             echo "kind=node" >> "$GITHUB_OUTPUT"
-            [ -f package-lock.json ] && echo "lock=npm" >> "$GITHUB_OUTPUT"
-            [ -f pnpm-lock.yaml ] && echo "lock=pnpm" >> "$GITHUB_OUTPUT"
-            [ -f yarn.lock ] && echo "lock=yarn" >> "$GITHUB_OUTPUT"
+            if [ -f pnpm-lock.yaml ]; then echo "lock=pnpm" >> "$GITHUB_OUTPUT"; fi
+            if [ -f yarn.lock ]; then echo "lock=yarn" >> "$GITHUB_OUTPUT"; fi
+            if [ -f package-lock.json ]; then echo "lock=npm" >> "$GITHUB_OUTPUT"; fi
           elif [ -f requirements.txt ] || [ -f pyproject.toml ]; then
             echo "kind=python" >> "$GITHUB_OUTPUT"
           elif find . -maxdepth 3 \( -name '*.sln' -o -name '*.csproj' \) -print -quit | grep -q .; then
