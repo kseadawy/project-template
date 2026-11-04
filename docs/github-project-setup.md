@@ -52,7 +52,11 @@
 
 > Duplicate بينقل: الحقول، العروض، الـ workflows المضبوطة، والـ draft issues. **مش** بينقل الـ Auto-add.
 
-## 6. Branch protection على الفرع الرئيسي
+## 6. حماية الفرع الرئيسي
+
+> ⚠️ **قيد مهم:** حماية الفروع والـ rulesets **مش متاحين على ريبو خاص بحساب مجاني** (محتاج GitHub Pro):
+> `403 — Upgrade to GitHub Pro or make this repository public`.
+> البديل: ريبو **public**، أو تشتغل بالانضباط (PR صغير + CI أخضر) وتوثّق إن البوابة مش مفعّلة.
 
 **Settings → Branches → Add rule** على `main`:
 
